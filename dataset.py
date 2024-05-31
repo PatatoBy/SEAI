@@ -1,7 +1,7 @@
 import torch
 
 class Dataset():
-    def __init__(self, batch_size):
+    def __init__(self, batch_size, negatives = False):
         self.dataset = torch.tensor([
             [0.,8.],[1.,8.],[2.,8.],[3.,8.],[4.,8.],
             [0.,7.],[1.,7.],[2.,7.],[3.,7.],[4.,7.],
@@ -13,7 +13,18 @@ class Dataset():
             [0.,1.],[1.,1.],[2.,1.],[3.,1.],[4.,1.]
         ])
 
-        self.labels = torch.tensor(
+        if negatives: 
+            self.labels = torch.tensor(  [-1.,-1.,-1.,-1.,-1.,
+                         -1.,-1.,-1.,-1.,-1.,
+                         -1.,-1.,-1.,-1.,-1.,
+                         -1.,-1.,1.,-1.,-1.,
+                         1.,1.,1.,-1.,1.,
+                         1.,1.,-1.,1.,1.,
+                         1.,1.,1.,1.,1.,
+                         1.,1.,1.,1.,1.])
+        else:
+
+            self.labels = torch.tensor(
             [0.,0.,0.,0.,0.,
             0.,0.,0.,0.,0.,
             0.,0.,0.,0.,0.,
@@ -23,6 +34,8 @@ class Dataset():
             1.,1.,1.,1.,1.,
             1.,1.,1.,1.,1.]
         )
+
+
         
         self.batch_size = batch_size
 
@@ -32,7 +45,7 @@ class Dataset():
 
         for i in range(len(self.dataset)):
             self.train_data.append([self.dataset[i], self.labels[i]])
-            if self.labels[i] == 0:
+            if self.labels[i] == (0 if not negatives else -1):
                 self.train_data0.append([self.dataset[i], self.labels[i]])
             elif self.labels[i] == 1:
                 self.train_data1.append([self.dataset[i], self.labels[i]])
